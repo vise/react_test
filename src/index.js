@@ -2,25 +2,28 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-function App(){
-  const [val, setVal] = useState("");
-  const [val2, setVal2] = useState("");
-
+function GitHubUser({ login }){
+  const [data, setData] = useState(null);
   useEffect(() => {
-    console.log(`field1: ${val}`);
-  }, [val])
-  
-  return (
-    <>
-      <label>
-        Input 1:
-        <input 
-          value={val} 
-          onChange={e => setVal(e.target.value)} 
-        />
-      </label>
-    </>
-  )
+    fetch(`https://api.github.com/users/${login}`)
+      .then(res => res.json())
+      .then(setData)
+      .catch(console.error);
+  }, []);
+  console.log(data)
+  if(data) {
+    return (
+    <div>
+      <h1>{data.login}</h1>
+      <img src={data.avatar_url} width={100}></img>
+    </div>
+    );
+  }
+  return null;
+}
+
+function App(){
+  return <GitHubUser login="viggos" />
 }
 
 ReactDOM.render(
